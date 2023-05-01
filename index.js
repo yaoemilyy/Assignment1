@@ -137,6 +137,9 @@ app.get('/createUser', (req,res) => {
 });
 
 app.get('/login', (req,res) => {
+
+    const errorMessage = req.query.error === 'incorrect-password' ? 'Incorrect email or password' : null;
+
     var html = `
     log in
     <form action='/loggingin' method='post'>
@@ -145,7 +148,14 @@ app.get('/login', (req,res) => {
     <button>Submit</button>
     </form>
     `;
+
+    if (errorMessage) {
+        html += "Invalid email/password combination.";
+        }
+
     res.send(html);
+   
+   
 });
 
 app.post('/submitUser', async (req,res) => {
@@ -215,7 +225,7 @@ app.post('/loggingin', async (req,res) => {
          }
          else {
              console.log("incorrect password");
-             res.redirect("/login");
+             res.redirect("/login?error=incorrect-password");
              return;
          }
 });
